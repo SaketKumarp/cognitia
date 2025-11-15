@@ -2,85 +2,99 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  // -----------------------------
+  // USERS
+  // -----------------------------
   users: defineTable({
-    clerkUserId: v.string(),
+    authId: v.string(), // Clerk or Auth provider ID
     name: v.string(),
-    institute: v.optional(v.string()),
-    branch: v.optional(v.string()),
-    year: v.optional(v.number()),
-    skills: v.optional(v.array(v.string())),
-    interests: v.optional(v.array(v.string())),
+    username: v.string(),
     bio: v.optional(v.string()),
-    avatarUrl: v.optional(v.string()),
-    verified: v.optional(v.boolean()),
-    createdAt: v.number(),
-  }).index("by_clerkId", ["clerkUserId"]),
 
-  projects: defineTable({
-    title: v.string(),
-    imageurl: v.string(),
-    description: v.string(),
-    tags: v.optional(v.array(v.string())),
-    requiredSkills: v.optional(v.array(v.string())),
-    authorUserId: v.id("users"), // FIXED
-    institute: v.optional(v.string()),
-    teamSizeNeeded: v.optional(v.number()),
-    createdAt: v.number(),
-    status: v.optional(v.string()),
-  }).index("by_author", ["authorUserId"]),
+    age: v.optional(v.number()),
+    gender: v.optional(v.string()),
 
+    // Dev-specific section
+    skills: v.array(v.string()), // ["React", "AI", "Next.js"]
+    interests: v.array(v.string()), // ["Hackathons", "Open Source"]
+    experienceLevel: v.optional(v.string()), // "Beginner" | "Intermediate" | "Advanced"
+
+    // External links
+    github: v.optional(v.string()),
+    portfolio: v.optional(v.string()),
+    linkedin: v.optional(v.string()),
+
+    photos: v.array(v.string()), // storage IDs
+
+    // Location (optional)
+    city: v.optional(v.string()),
+    country: v.optional(v.string()),
+
+    createdAt: v.number(),
+  })
+    .index("by_authId", ["authId"])
+    .index("by_username", ["username"]),
+
+  // -----------------------------
+  // SWIPES
+  // -----------------------------
+  swipes: defineTable({
+    fromUser: v.id("users"),
+    toUser: v.id("users"),
+    direction: v.union(v.literal("left"), v.literal("right")),
+    createdAt: v.number(),
+  })
+    .index("by_fromUser", ["fromUser"])
+    .index("by_toUser", ["toUser"])
+    .index("by_both", ["fromUser", "toUser"]),
+
+  // -----------------------------
+  // MATCHES
+  // -----------------------------
   matches: defineTable({
-    userId: v.id("users"), // FIXED
-    projectId: v.id("projects"),
-    direction: v.string(),
-    liked: v.boolean(),
-    matched: v.optional(v.boolean()),
+    user1: v.id("users"),
+    user2: v.id("users"),
     createdAt: v.number(),
-  }).index("by_user_project", ["userId", "projectId"]),
+  })
+    .index("by_user1", ["user1"])
+    .index("by_user2", ["user2"])
+    .index("by_pair", ["user1", "user2"]),
 
-  conversations: defineTable({
-    participantIds: v.array(v.id("users")), // FIXED
-    lastMessageAt: v.optional(v.number()),
-    createdAt: v.number(),
-  }),
-
+  // -----------------------------
+  // OPTIONAL: CHAT MESSAGES
+  // -----------------------------
   messages: defineTable({
-    conversationId: v.id("conversations"),
-    fromUserId: v.id("users"), // FIXED
-    toUserId: v.id("users"), // FIXED
+    matchId: v.id("matches"),
+    sender: v.id("users"),
     text: v.string(),
     createdAt: v.number(),
-  }).index("by_conversation", ["conversationId"]),
+  }).index("by_match", ["matchId"]),
 
-  endorsements: defineTable({
-    fromUserId: v.id("users"), // FIXED
-    toUserId: v.id("users"), // FIXED
-    skill: v.string(),
+  // -----------------------------
+  // OPTIONAL: PROFILE VIEWS
+  // -----------------------------
+  profileViews: defineTable({
+    viewer: v.id("users"),
+    viewed: v.id("users"),
     createdAt: v.number(),
-  }),
+  }).index("by_viewed", ["viewed"]),
 
-  competitions: defineTable({
-    title: v.string(),
-    description: v.string(),
-    tags: v.optional(v.array(v.string())),
-    createdBy: v.id("users"), // FIXED
+  // -----------------------------
+  // OPTIONAL: SAVED USERS (super-like or bookmark)
+  // -----------------------------
+  saved: defineTable({
+    user: v.id("users"),
+    savedUser: v.id("users"),
     createdAt: v.number(),
-  }),
+  }).index("by_user", ["user"]),
 
-  applications: defineTable({
-    projectId: v.id("projects"),
-    userId: v.id("users"), // FIXED
-    role: v.optional(v.string()),
-    status: v.optional(v.string()),
+  // -----------------------------
+  // STORAGE (photos, resume, etc.)
+  // -----------------------------
+  files: defineTable({
+    user: v.id("users"),
+    storageId: v.string(),
+    type: v.string(), // "photo", "resume"
     createdAt: v.number(),
-  }),
-
-  notifications: defineTable({
-    userId: v.id("users"), // FIXED
-    type: v.string(),
-    title: v.string(),
-    body: v.optional(v.string()),
-    read: v.optional(v.boolean()),
-    createdAt: v.number(),
-  }),
+  }).index("by_user", ["user"]),
 });

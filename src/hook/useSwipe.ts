@@ -1,45 +1,45 @@
-"use client";
+// "use client";
 
-import { useState, useCallback } from "react";
-import { useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import { Id } from "../../convex/_generated/dataModel";
+// import { useState, useCallback } from "react";
+// import { useMutation } from "convex/react";
+// import { api } from "../../convex/_generated/api";
+// import { Id } from "../../convex/_generated/dataModel";
 
-type SwipeArgs = {
-  userId: Id<"users">;
-  projectId: Id<"projects">;
-  liked: boolean;
-};
+// type SwipeArgs = {
+//   userId: Id<"users">;
 
-type Options = {
-  onSuccess?: (response: string | Id<"matches">) => void;
-  onError?: (error: unknown) => void;
-};
+//   liked: boolean;
+// };
 
-export const useSwipeProject = () => {
-  const [loading, setLoading] = useState(false);
+// type Options = {
+//   onSuccess?: (response: string | Id<"matches">) => void;
+//   onError?: (error: unknown) => void;
+// };
 
-  const mutation = useMutation(api.matches.swipeProject);
+// export const useSwipeProject = () => {
+//   const [loading, setLoading] = useState(false);
 
-  const mutate = useCallback(
-    async (values: SwipeArgs, options?: Options) => {
-      try {
-        setLoading(true);
+//   const mutation = useMutation(api.matches.getMatches);
 
-        const response = await mutation(values);
+//   const mutate = useCallback(
+//     async (values: SwipeArgs, options?: Options) => {
+//       try {
+//         setLoading(true);
 
-        options?.onSuccess?.(response);
-        return response;
-      } catch (error) {
-        console.error("Swipe failed:", error);
-        options?.onError?.(error);
-        throw error;
-      } finally {
-        setLoading(false);
-      }
-    },
-    [mutation]
-  );
+//         const response = await mutation(values);
 
-  return { mutate, loading };
-};
+//         options?.onSuccess?.(response);
+//         return response;
+//       } catch (error) {
+//         console.error("Swipe failed:", error);
+//         options?.onError?.(error);
+//         throw error;
+//       } finally {
+//         setLoading(false);
+//       }
+//     },
+//     [mutation]
+//   );
+
+//   return { mutate, loading };
+// };

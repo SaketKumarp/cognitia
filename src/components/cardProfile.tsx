@@ -15,11 +15,13 @@ export default function ProfileCard({ onClose }: { onClose: () => void }) {
       </button>
 
       <div className="flex flex-col items-center">
+        {/* PROFILE IMAGE */}
         <div className="relative w-32 h-32 -mt-20 rounded-full overflow-hidden shadow-lg border-4 border-white">
           <Image
-            src="/placeholder/8.svg"
-            alt="User Profile"
+            src="/placeholder/1.svg"
+            alt="profile"
             fill
+            sizes="128px"
             className="object-cover"
           />
         </div>

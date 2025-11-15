@@ -1,58 +1,86 @@
-import { v } from "convex/values";
+// convex/users.ts
 import { mutation, query } from "./_generated/server";
+import { v } from "convex/values";
 
-/**************************************************************
- * 1) GET USER BY USER-ID (Convex user._id)
- **************************************************************/
-export const getUser = query({
-  args: { userId: v.id("users") },
-  handler: async (ctx, { userId }) => {
-    return await ctx.db.get(userId);
-  },
-});
-
-/**************************************************************
- * 2) UPDATE USER PROFILE
- **************************************************************/
-export const updateUser = mutation({
+// CREATE USER (first time login)
+export const createUser = mutation({
   args: {
-    userId: v.id("users"), // Convex document ID
+    authId: v.string(),
     name: v.string(),
-    institute: v.optional(v.string()),
-    branch: v.optional(v.string()),
-    year: v.optional(v.number()),
-    skills: v.optional(v.array(v.string())),
-    interests: v.optional(v.array(v.string())),
+    username: v.string(),
     bio: v.optional(v.string()),
-    avatarUrl: v.optional(v.string()),
+
+    age: v.optional(v.number()),
+    gender: v.optional(v.string()),
+
+    skills: v.array(v.string()),
+    interests: v.array(v.string()),
+    experienceLevel: v.optional(v.string()),
+
+    github: v.optional(v.string()),
+    portfolio: v.optional(v.string()),
+    linkedin: v.optional(v.string()),
+
+    photos: v.array(v.string()),
+
+    city: v.optional(v.string()),
+    country: v.optional(v.string()),
+
+    createdAt: v.number(),
   },
-
   handler: async (ctx, args) => {
-    const { userId, ...rest } = args;
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", args.authId))
+      .unique();
 
-    const existing = await ctx.db.get(userId);
-    if (!existing) throw new Error("User not found");
+    if (existing) {
+      throw new Error("user already exixts");
+    }
 
-    await ctx.db.patch(userId, rest);
-    return userId;
+    const id = await ctx.db.insert("users", {
+      ...args,
+      bio: "",
+      skills: [],
+      interests: [],
+      photos: [],
+      createdAt: Date.now(),
+    });
+
+    return id;
   },
 });
 
-/**************************************************************
- * 3) SEARCH USERS (name, skills, interests)
- **************************************************************/
-export const searchUsers = query({
-  args: { query: v.string() },
-  handler: async (ctx, { query }) => {
-    const q = query.toLowerCase();
+// UPDATE USER PROFILE
+export const updateProfile = mutation({
+  args: {
+    userId: v.id("users"),
+    data: v.object({
+      bio: v.optional(v.string()),
+      skills: v.optional(v.array(v.string())),
+      interests: v.optional(v.array(v.string())),
+      github: v.optional(v.string()),
+      linkedin: v.optional(v.string()),
+      portfolio: v.optional(v.string()),
+      photos: v.optional(v.array(v.string())),
+    }),
+  },
+  handler: async (ctx, { userId, data }) => {
+    const user = await ctx.auth.getUserIdentity();
+    if (!user) throw new Error("unauthorized");
+    await ctx.db.patch(userId, data);
+    return { success: true };
+  },
+});
 
-    const all = await ctx.db.query("users").collect();
+// GET PROFILE
 
-    return all.filter(
-      (u) =>
-        u.name?.toLowerCase().includes(q) ||
-        u.skills?.some((s) => s.toLowerCase().includes(q)) ||
-        u.interests?.some((i) => i.toLowerCase().includes(q))
-    );
+export const getUserProfile = query({
+  args: { authId: v.string() },
+  handler: async (ctx, { authId }) => {
+    return await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", authId))
+      .first();
   },
 });

@@ -8,9 +8,9 @@
  * @module
  */
 
-import type * as conversation from "../conversation.js";
+import type * as feed from "../feed.js";
 import type * as matches from "../matches.js";
-import type * as project from "../project.js";
+import type * as swipe from "../swipe.js";
 import type * as user from "../user.js";
 
 import type {
@@ -20,9 +20,9 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  conversation: typeof conversation;
+  feed: typeof feed;
   matches: typeof matches;
-  project: typeof project;
+  swipe: typeof swipe;
   user: typeof user;
 }>;
 
