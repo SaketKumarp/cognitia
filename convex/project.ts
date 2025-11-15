@@ -2,6 +2,20 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 
 // Create project
+
+const images = [
+  "/placeholder/1.svg",
+  "/placeholder/2.svg",
+  "/placeholder/3.svg",
+  "/placeholder/4.svg",
+  "/placeholder/5.svg",
+  "/placeholder/6.svg",
+  "/placeholder/7.svg",
+  "/placeholder/8.svg",
+  "/placeholder/9.svg",
+  "/placeholder/10.svg",
+];
+
 export const createProject = mutation({
   args: {
     title: v.string(),
@@ -14,8 +28,10 @@ export const createProject = mutation({
   },
 
   handler: async (ctx, args) => {
+    const randomImage = images[Math.floor(Math.random() * images.length)];
     return await ctx.db.insert("projects", {
       ...args,
+      imageurl: randomImage,
       status: "open",
       createdAt: Date.now(),
     });
