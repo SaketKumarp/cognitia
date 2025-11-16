@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 import { Person } from "./sidebar";
 import { Card } from "./ui/card";
+import { images } from "@/func";
 
 export const MatchCard = ({
   user,
@@ -10,6 +11,7 @@ export const MatchCard = ({
   user: Person;
   onClick: () => void;
 }) => {
+  const randomImage = images[Math.floor(Math.random() * images.length)];
   return (
     <Card
       onClick={onClick}
@@ -26,7 +28,7 @@ export const MatchCard = ({
 
         <div className="relative w-full h-full rounded-full overflow-hidden border border-white/20">
           <Image
-            src="/placeholder/1.svg"
+            src={randomImage}
             alt={user.name}
             width={56}
             height={56}

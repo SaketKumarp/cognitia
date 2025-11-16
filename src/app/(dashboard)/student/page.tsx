@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useQuery } from "convex/react";
 api;
-import { useSwipeProject } from "@/hook/useSwipe";
+import { useSwipeProject } from "@/hook/use-swipe-user";
 import { Id } from "../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { api } from "../../../../convex/_generated/api";

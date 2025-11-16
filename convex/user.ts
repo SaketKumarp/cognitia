@@ -88,3 +88,15 @@ export const getAllUsers = query({
     return await ctx.db.query("users").collect();
   },
 });
+
+export const getCurrentUser = query({
+  args: { authId: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", args.authId))
+      .unique();
+
+    return user;
+  },
+});

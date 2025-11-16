@@ -4,34 +4,38 @@ import { useState, useMemo } from "react";
 import ReactDOM from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { X, Heart, Plus } from "lucide-react";
+import { X, Heart, Plus, Upload } from "lucide-react";
 
 import ProfileCard from "@/components/cardProfile";
-
 import { useGetAllUsers } from "@/hook/usegetAllUsers";
 import SwipeCard from "@/components/swipecard";
 
 import { useAuth } from "@clerk/nextjs";
 import Sidebar from "@/components/sidebar";
+import { randomImage } from "@/func";
+
+import { toast } from "sonner";
+import { useSwipeUser } from "@/hook/use-swipe-user";
+import { useRouter } from "next/navigation";
 
 export default function SwipePage() {
   const { userId } = useAuth();
   const { data: users, loading } = useGetAllUsers();
+  const { mutate: swipeUser } = useSwipeUser(); // <--- use swipe hook
 
   const [index, setIndex] = useState(0);
   const [forceSwipe, setForceSwipe] = useState<"left" | "right" | null>(null);
   const [showProfile, setShowProfile] = useState(false);
 
-  const images = useMemo(
-    () =>
-      Array.from({ length: 100 }, (_, i) => {
-        const n = Math.floor(Math.random() * 10) + 1;
-        return `/placeholder/${n}.jpg`;
-      }),
-    []
-  );
+  // remove myself from the list
 
-  if (loading || !users) {
+  const router = useRouter();
+  const filteredUsers = useMemo(() => {
+    if (!users || !userId) return [];
+    return users.filter((u: any) => u.authId !== userId);
+  }, [users, userId]);
+
+  if (loading || filteredUsers.length === 0) {
     return (
       <div className="h-screen flex items-center justify-center text-white bg-neutral-900">
         Loading users...
@@ -39,21 +43,66 @@ export default function SwipePage() {
     );
   }
 
+  const handleUpload = () => {
+    router.replace("/swipe/upload");
+  };
+
   const nextCard = () => {
-    if (users.length === 0) return;
-    setIndex((i) => (i + 1) % users.length);
+    if (filteredUsers.length === 0) return;
+    setIndex((i) => (i + 1) % filteredUsers.length);
     setForceSwipe(null);
   };
 
-  const handleSwipe = () => nextCard();
+  // When swipe happens from SwipeCard component
+  const handleSwipe = (dir?: "left" | "right") => {
+    const currentUser = filteredUsers[index];
+    if (!currentUser) return;
 
+    if (dir === "left" || dir === "right") {
+      swipeUser(
+        {
+          toUser: currentUser._id, // convex ID ❤️
+          direction: dir,
+        },
+        {
+          onSuccess: (res) => {
+            if (res.matched) {
+              console.log("🔥 YOU GOT A MATCH!");
+            }
+          },
+          onError: () => {
+            toast.error("an error occured!");
+          },
+        }
+      );
+    }
+
+    nextCard();
+  };
+
+  // When buttons pressed
   const handleButtonSwipe = (dir: "left" | "right") => {
+    const currentUser = filteredUsers[index];
+    if (!currentUser) return;
+
+    // trigger animation
     setForceSwipe(dir);
+
+    // send swipe to backend
+    swipeUser(
+      { toUser: currentUser._id, direction: dir },
+      {
+        onSuccess: () => {
+          toast.success("match found");
+        },
+      }
+    );
+
+    // show next card
     setTimeout(nextCard, 350);
   };
 
-  const user = users[index];
-  const fallbackImage = images[index];
+  const user = filteredUsers[index];
 
   return (
     <>
@@ -83,17 +132,18 @@ export default function SwipePage() {
           <motion.div className="relative w-[360px] h-[530px]">
             <SwipeCard
               key={user._id}
-              image={fallbackImage}
+              image={randomImage}
               name={user.name}
               age={user.age || 18}
               skills={user.skills || []}
-              onSwipe={handleSwipe}
-              forceSwipe={forceSwipe}
+              onSwipe={handleSwipe} // <-- swipe triggered
+              forceSwipe={forceSwipe} // <-- force animation
             />
           </motion.div>
 
           {/* buttons */}
           <motion.div className="mt-8 flex gap-6 p-4 rounded-full bg-white/10 backdrop-blur-2xl border border-white/20">
+            {/* left */}
             <Button
               size="icon"
               className="rounded-full bg-red-600/90 text-white h-16 w-16"
@@ -102,6 +152,7 @@ export default function SwipePage() {
               <X size={34} />
             </Button>
 
+            {/* profile */}
             <Button
               size="icon"
               className="rounded-full bg-blue-600/90 text-white h-16 w-16"
@@ -110,12 +161,20 @@ export default function SwipePage() {
               <Plus size={34} />
             </Button>
 
+            {/* right */}
             <Button
               size="icon"
               className="rounded-full bg-green-600/90 text-white h-16 w-16"
               onClick={() => handleButtonSwipe("right")}
             >
               <Heart size={34} />
+            </Button>
+            <Button
+              size="icon"
+              className="rounded-full bg-yellow-600/90 text-white h-16 w-16"
+              onClick={handleUpload}
+            >
+              <Upload size={34} />
             </Button>
           </motion.div>
         </div>

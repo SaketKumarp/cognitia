@@ -1,5 +1,5 @@
 import { Id } from "../../convex/_generated/dataModel";
-import { useSwipeProject } from "@/hook/useSwipe";
+import { useSwipeProject } from "@/hook/use-swipe-user";
 
 type ProjectSwipeCardProps = {
   userId: Id<"users">;

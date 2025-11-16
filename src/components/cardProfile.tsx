@@ -13,6 +13,8 @@ interface ProfileCardProps {
 export default function ProfileCard({ profile, onClose }: ProfileCardProps) {
   const user = profile;
 
+ 
+
   return (
     <Card className="w-full max-w-md rounded-2xl shadow-xl p-6 bg-white relative">
       {/* Close button */}
