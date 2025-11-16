@@ -28,24 +28,20 @@ export const createUser = mutation({
 
     createdAt: v.number(),
   },
+
   handler: async (ctx, args) => {
+    // Prevent duplicate accounts
     const existing = await ctx.db
       .query("users")
       .withIndex("by_authId", (q) => q.eq("authId", args.authId))
       .unique();
 
     if (existing) {
-      throw new Error("user already exixts");
+      throw new Error("User already exists");
     }
 
-    const id = await ctx.db.insert("users", {
-      ...args,
-      bio: "",
-      skills: [],
-      interests: [],
-      photos: [],
-      createdAt: Date.now(),
-    });
+    // INSERT EXACT VALUES FROM FRONTEND
+    const id = await ctx.db.insert("users", args);
 
     return id;
   },

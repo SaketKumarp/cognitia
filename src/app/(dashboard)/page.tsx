@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,95 +10,106 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
 import Link from "next/link";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useCreateUser } from "@/hook/userProfile";
-import { registerSchema } from "@/components/schema";
 
 // Clerk
-import { useSignUp } from "@clerk/nextjs";
+import { useSignUp, useUser } from "@clerk/nextjs";
 
 export default function Signup() {
   const router = useRouter();
-  const { isLoaded, signUp, setActive } = useSignUp();
-
-  const form = useForm<z.infer<typeof registerSchema>>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      skills: [],
-      interests: [],
-      photos: [],
-    },
-  });
-
+  const { isLoaded } = useSignUp();
+  const { user } = useUser();
   const { mutate: createUser, loading } = useCreateUser();
 
-  const onSubmit = async (values: z.infer<typeof registerSchema>) => {
-    if (!isLoaded) return;
+  // ⭐ Plain React state (working version)
+  const [form, setForm] = useState({
+    name: "",
+    bio: "",
+    age: "",
+    gender: "",
+    skills: "",
+    interests: "",
+    experienceLevel: "",
+    github: "",
+    portfolio: "",
+    linkedin: "",
+    city: "",
+    country: "",
+  });
+
+  // ⭐ Handles all changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  // ⭐ Submit Handler
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!isLoaded || !user) return;
 
     try {
-      // 1️⃣ Create Clerk user
-      const result = await signUp.create({
-        emailAddress: values.email,
-        password: values.password,
-      });
+      console.log("SUBMIT VALUES:", form);
 
-      // Requires verification (Clerk sends email)
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      // 👉 convert strings → arrays
+      const skillsArray = form.skills
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
 
-      toast("Verification email sent!", { description: "Check your inbox." });
+      const interestsArray = form.interests
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
 
-      // 2️⃣ After verification → create Convex user
-      const clerkUserId = result.id; // <-- This is your Convex authId
+      createUser(
+        {
+          authId: user.id,
+          name: form.name,
+          username: user.fullName ?? "",
+          bio: form.bio,
+          age: Number(form.age),
+          gender: form.gender,
 
-      const generatedUsername = values.name.toLowerCase().replace(/\s+/g, "");
+          skills: skillsArray,
+          interests: interestsArray,
 
-      const payload = {
-        authId: clerkUserId,
-        name: values.name,
-        username: generatedUsername,
-        bio: "",
-        age: values.age,
-        gender: values.gender,
-        skills: values.skills,
-        interests: values.interests,
-        experienceLevel: values.experienceLevel,
-        github: values.github,
-        portfolio: values.portfolio,
-        linkedin: values.linkedin,
-        photos: values.photos,
-        city: values.city,
-        country: values.country,
-        createdAt: Date.now(),
-      };
+          experienceLevel: form.experienceLevel,
+          github: form.github,
+          portfolio: form.portfolio,
+          linkedin: form.linkedin,
+          city: form.city,
+          country: form.country,
 
-      createUser(payload, {
-        onSuccess: () => {
-          toast("Account created!", { description: "Welcome!" });
-          router.replace("/");
+          photos: [],
+          createdAt: Date.now(),
         },
-        onError: () => {
-          toast("Registration failed in Convex!");
-        },
-      });
-    } catch (err: any) {
-      toast("Registration failed!", { description: err.message });
+        {
+          onSuccess: () => {
+            toast.success("Account created!", { description: "Welcome!" });
+            router.replace("/swipe");
+          },
+          onError: () => {
+            toast.error("Convex user creation failed!");
+          },
+        }
+      );
+    } catch (err) {
+      toast.error("Registration failed!");
     }
   };
 
   return (
     <Card className="w-full max-w-4xl mx-auto rounded-2xl shadow-xl border bg-white flex flex-col md:flex-row overflow-hidden">
-      {/* Left Section */}
+      {/* Left */}
       <div className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white w-full md:w-1/2 p-10 flex flex-col justify-center">
         <h2 className="text-3xl font-bold mb-3">Welcome!</h2>
         <p className="text-white/90">
@@ -105,7 +117,7 @@ export default function Signup() {
         </p>
       </div>
 
-      {/* Right Section */}
+      {/* Right */}
       <CardContent className="w-full md:w-1/2 p-10 space-y-6">
         <CardHeader className="p-0">
           <CardTitle className="text-2xl">Create Account</CardTitle>
@@ -117,28 +129,95 @@ export default function Signup() {
           </CardDescription>
         </CardHeader>
 
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <Input placeholder="Name" {...form.register("name")} required />
+        <form onSubmit={onSubmit} className="space-y-4">
           <Input
-            placeholder="Email"
-            type="email"
-            {...form.register("email")}
-            required
+            name="name"
+            placeholder="Name"
+            value={form.name}
+            onChange={handleChange}
           />
           <Input
-            placeholder="Password"
-            type="password"
-            {...form.register("password")}
-            required
+            name="bio"
+            placeholder="Bio"
+            value={form.bio}
+            onChange={handleChange}
+          />
+          <Input
+            name="age"
+            type="number"
+            placeholder="Age"
+            value={form.age}
+            onChange={handleChange}
+          />
+          <Input
+            name="gender"
+            placeholder="Gender"
+            value={form.gender}
+            onChange={handleChange}
+          />
+
+          {/* SKILLS */}
+          <Input
+            name="skills"
+            placeholder="Skills (comma separated)"
+            value={form.skills}
+            onChange={handleChange}
+          />
+
+          {/* INTERESTS */}
+          <Input
+            name="interests"
+            placeholder="Interests (comma separated)"
+            value={form.interests}
+            onChange={handleChange}
+          />
+
+          <Input
+            name="experienceLevel"
+            placeholder="Experience Level"
+            value={form.experienceLevel}
+            onChange={handleChange}
+          />
+          <Input
+            name="github"
+            placeholder="Github"
+            value={form.github}
+            onChange={handleChange}
+          />
+          <Input
+            name="portfolio"
+            placeholder="Portfolio"
+            value={form.portfolio}
+            onChange={handleChange}
+          />
+          <Input
+            name="linkedin"
+            placeholder="LinkedIn"
+            value={form.linkedin}
+            onChange={handleChange}
+          />
+
+          <Input
+            name="city"
+            placeholder="City"
+            value={form.city}
+            onChange={handleChange}
+          />
+          <Input
+            name="country"
+            placeholder="Country"
+            value={form.country}
+            onChange={handleChange}
           />
 
           <Button
+            variant="secondary"
             type="submit"
-            className="w-full font-bold"
+            className="w-full font-bold hover:bg-slate-200/75"
             size="lg"
             disabled={loading}
           >
-            {loading ? "Creating..." : "Register"}
+            {loading ? "Creating..." : "Create Your Profile"}
           </Button>
         </form>
 

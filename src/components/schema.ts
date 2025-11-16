@@ -2,17 +2,16 @@ import * as z from "zod";
 
 export const registerSchema = z.object({
   name: z.string().min(2).max(50),
-  email: z.email(),
-  password: z.string().min(6),
+  // Email + password removed because Clerk handles authentication
 
   age: z.number().optional(),
   gender: z.string().optional(),
 
-  // REQUIRED in backend → must exist in Zod → but we default them
-  skills: z.array(z.string()).default([]),
-  interests: z.array(z.string()).default([]),
-  photos: z.array(z.string()).default([]),
+  skills: z.union([z.string(), z.array(z.string())]).optional(),
+  interests: z.union([z.string(), z.array(z.string())]).optional(),
 
+  photos: z.array(z.string()).default([]).optional(),
+  bio: z.string().optional(),
   experienceLevel: z.string().optional(),
 
   github: z.url().optional(),
