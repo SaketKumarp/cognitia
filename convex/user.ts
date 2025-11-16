@@ -80,3 +80,11 @@ export const getUserProfile = query({
       .first();
   },
 });
+
+// GET ALL USERS
+export const getAllUsers = query({
+  args: {},
+  handler: async (ctx) => {
+    return await ctx.db.query("users").collect();
+  },
+});

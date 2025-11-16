@@ -1,131 +1,147 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import ReactDOM from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { X, Heart, Star } from "lucide-react";
-import SwipeCard from "@/components/newSwipe";
+import { X, Heart, Plus } from "lucide-react";
+
 import ProfileCard from "@/components/cardProfile";
-import { Sidebar } from "@/components/sidebar";
 
-const images = [
-  "/placeholder/1.svg",
-  "/placeholder/2.svg",
-  "/placeholder/3.svg",
-  "/placeholder/4.svg",
-  "/placeholder/5.svg",
-  "/placeholder/6.svg",
-  "/placeholder/7.svg",
-  "/placeholder/8.svg",
-  "/placeholder/9.svg",
-  "/placeholder/10.svg",
-];
+import { useGetAllUsers } from "@/hook/usegetAllUsers";
+import SwipeCard from "@/components/swipecard";
 
-/**
- * ProfilePortal
- * Renders children into document.body to avoid being affected by transformed ancestors.
- */
-function ProfilePortal({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  if (!mounted) return null;
-  return ReactDOM.createPortal(children, document.body);
-}
+import { useAuth } from "@clerk/nextjs";
+import Sidebar from "@/components/sidebar";
 
 export default function SwipePage() {
+  const { userId } = useAuth();
+  const { data: users, loading } = useGetAllUsers();
+
   const [index, setIndex] = useState(0);
   const [forceSwipe, setForceSwipe] = useState<"left" | "right" | null>(null);
   const [showProfile, setShowProfile] = useState(false);
 
+  const images = useMemo(
+    () =>
+      Array.from({ length: 100 }, (_, i) => {
+        const n = Math.floor(Math.random() * 10) + 1;
+        return `/placeholder/${n}.jpg`;
+      }),
+    []
+  );
+
+  if (loading || !users) {
+    return (
+      <div className="h-screen flex items-center justify-center text-white bg-neutral-900">
+        Loading users...
+      </div>
+    );
+  }
+
   const nextCard = () => {
-    setIndex((i) => (i + 1) % images.length);
+    if (users.length === 0) return;
+    setIndex((i) => (i + 1) % users.length);
     setForceSwipe(null);
   };
 
   const handleSwipe = () => nextCard();
 
-  const handleButtonSwipe = (direction: "left" | "right") => {
-    setForceSwipe(direction);
-    setTimeout(() => handleSwipe(direction), 300);
+  const handleButtonSwipe = (dir: "left" | "right") => {
+    setForceSwipe(dir);
+    setTimeout(nextCard, 350);
   };
+
+  const user = users[index];
+  const fallbackImage = images[index];
 
   return (
     <>
-      <div className="h-screen w-screen bg-neutral-900 flex flex-row overflow-hidden">
-        {/* LEFT SIDEBAR */}
-        <Sidebar />
+      {/* background */}
+      <div className="h-screen w-screen flex relative overflow-hidden">
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/haha.jpg')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          initial={{ scale: 1.05, opacity: 0.7 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        />
 
-        {/* RIGHT: SWIPE UI AREA */}
-        <div className="flex-1 flex flex-col items-center justify-center relative">
-          {/* CARD CONTAINER WITH SHRINK EFFECT */}
-          <motion.div
-            animate={
-              showProfile
-                ? { scale: 0.85, y: -40, opacity: 0.6 }
-                : { scale: 1, y: 0, opacity: 1 }
-            }
-            transition={{ duration: 0.35, ease: "easeOut" }}
-            className="relative w-[350px] h-[500px]"
-          >
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+
+        {/* Sidebar */}
+        <div className="relative z-40">
+          <Sidebar />
+        </div>
+
+        {/* swipe area */}
+        <div className="flex-1 flex flex-col items-center justify-center relative z-30">
+          <motion.div className="relative w-[360px] h-[530px]">
             <SwipeCard
-              key={index}
-              image={images[index]}
-              name={`Student ${index + 1}`}
-              age={20 + index}
-              skills={["AI", "Hackathons", "Web Dev"]}
+              key={user._id}
+              image={fallbackImage}
+              name={user.name}
+              age={user.age || 18}
+              skills={user.skills || []}
               onSwipe={handleSwipe}
               forceSwipe={forceSwipe}
             />
           </motion.div>
 
-          {/* BUTTONS */}
-          <div className="flex gap-4 mt-6">
+          {/* buttons */}
+          <motion.div className="mt-8 flex gap-6 p-4 rounded-full bg-white/10 backdrop-blur-2xl border border-white/20">
             <Button
               size="icon"
-              className="rounded-full bg-red-600 text-white h-14 w-14"
+              className="rounded-full bg-red-600/90 text-white h-16 w-16"
               onClick={() => handleButtonSwipe("left")}
             >
-              <X size={32} />
+              <X size={34} />
             </Button>
 
             <Button
               size="icon"
-              className="rounded-full bg-blue-600 text-white h-14 w-14"
+              className="rounded-full bg-blue-600/90 text-white h-16 w-16"
               onClick={() => setShowProfile(true)}
             >
-              <Star size={32} />
+              <Plus size={34} />
             </Button>
 
             <Button
               size="icon"
-              className="rounded-full bg-green-600 text-white h-14 w-14"
+              className="rounded-full bg-green-600/90 text-white h-16 w-16"
               onClick={() => handleButtonSwipe("right")}
             >
-              <Heart size={32} />
+              <Heart size={34} />
             </Button>
-          </div>
+          </motion.div>
         </div>
       </div>
 
-      {/* Profile modal rendered into document.body via portal so it's always viewport-fixed */}
-      <ProfilePortal>
-        <AnimatePresence>
-          {showProfile && (
-            <motion.div
-              key="profile-modal"
-              initial={{ y: 500, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 500, opacity: 0 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="fixed bottom-0 left-0 right-0 flex justify-center pb-8 z-50"
-            >
-              {/* Pass onClose prop so ProfileCard can close itself */}
-              <ProfileCard onClose={() => setShowProfile(false)} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </ProfilePortal>
+      {/* Profile modal */}
+      {typeof window !== "undefined" &&
+        ReactDOM.createPortal(
+          <AnimatePresence>
+            {showProfile && (
+              <motion.div
+                key="modal"
+                className="fixed bottom-0 left-0 right-0 flex justify-center pb-10 z-50"
+                initial={{ y: 500, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 500, opacity: 0 }}
+              >
+                <ProfileCard
+                  profile={user}
+                  onClose={() => setShowProfile(false)}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
     </>
   );
 }

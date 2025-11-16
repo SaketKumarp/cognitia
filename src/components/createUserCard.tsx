@@ -7,7 +7,6 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useEffect } from "react";
-import Image from "next/image";
 
 export default function CreateUserCard() {
   const router = useRouter();
@@ -76,12 +75,6 @@ export default function CreateUserCard() {
         <h2 className="text-xl font-semibold">Welcome Back 👋</h2>
 
         <div className="flex items-center gap-3">
-          {/* <Image
-            fill
-            src={profile.photos?.[0] ?? "/placeholder/1.svg"}
-            alt="profile"
-            className="w-12 h-12 rounded-full object-cover border"
-          /> */}
           <div>
             <p className="font-semibold">{profile.name}</p>
             <p className="text-neutral-400 text-sm">@{profile.username}</p>
