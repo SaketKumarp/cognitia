@@ -1,230 +1,143 @@
 # 🚀 Innovators Hub
 
-Innovators Hub is a swipe-based networking platform designed for developers, builders, founders, and creators.  
-Built using **Next.js**, **Convex**, **Clerk**, **Framer Motion**, and **ShadCN UI**, it helps users discover collaborators based on **skills**, **domains**, and **interests**.
+Innovators Hub is a swipe-based networking platform built for **developers, founders, builders, and creators**.  
+It helps users discover collaborators based on **skills**, **domains**, and **interests**, making it ideal for hackathons, startup teams, and project partnerships.
 
----
-
-## 📸 Screenshots
-
-### 🟨 Swipe Interface
-
-![Swipe UI](public/screenshots/ss1.png)
-
-### 🟨 Profile Preview Modal
-
-![Profile Modal](public/screenshots/ss2.png)
-
-### 🟨 Matches Sidebar
-
-![Matches Sidebar](public/screenshots/ss3.png)
-
-### 🟨 Skill & Interest Display
-
-![Skills UI](public/screenshots/ss4.png)
-
-### 🟨 Navbar + Global Search
-
-![Navbar Search](public/screenshots/ss5.png)
-
-### 🟨 Glass UI + Animations
-
-![Glass UI](public/screenshots/ss6.png)
-
-### 🟨 User Swipe Card
-
-![Swipe Card](public/screenshots/ss7.png)
-
-### 🟨 Full Layout Example
-
-![Full Layout](public/screenshots/ss8.png)
-
-# ✨ Features
-
-## 🔥 Swipe-Based Matching
-
-A smooth, intuitive swipe interface similar to Tinder, powered by **Framer Motion**.  
-Users can:
-
-- Swipe **right** → Like
-- Swipe **left** → Skip
-- Use action buttons for like / dislike
-- Open full profile details with one tap
-
-## 🪄 Random Avatar Generator
-
-Each new user receives a randomly selected avatar from 24 SVG placeholders  
-(`placeholder/1.svg` → `placeholder/24.svg`).
-
-This keeps profiles visually consistent even without user photos.
-
-## 👤 Profile Details Modal
-
-The expanded profile modal includes:
-
-- Name, age, bio
-- Skills & technical stack
-- Interests
-- Experience
-- Social media sections
-- “Message” and “Connect” actions
-
-## ⭐ Matches Sidebar
-
-A left-side panel showing:
-
-- User avatar
-- Name & age
-- Interests summary
-- Favorite/star button
-- Persistent match list
-
-## 🔍 Global Search
-
-Search for innovators by:
-
-- Name
-- Skills (React, Firebase, UX, etc.)
-- Tools / technologies
-- Domains (AI, Web, Mobile, etc.)
-
-## 🎨 Modern UI & Animations
-
-- ShadCN UI components
-- Tailwind CSS styling
-- Lucide icons
-- Glassmorphism elements
-- Smooth transitions & spring animations
-- Fully responsive
-
----
-
-# 🛠️ Tech Stack
-
-### **Frontend**
-
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- ShadCN UI
-- Framer Motion
-- Lucide Icons
-
-### **Backend**
-
-- Convex (Real-time database + functions)
-- Convex queries + mutations for:
-  - Users
-  - Swipe actions
-  - Matches
-  - Skill parsing
-
-### **Authentication**
-
-- Clerk (OAuth, email login)
-
----
-
-# 📦 Getting Started
-
-Install dependencies:
-
-````bash
-npm install
-# or
-yarn
-# or
-pnpm install
-# or
-bun install
-# 🚀 Innovators Hub
-
-Innovators Hub is a swipe-based networking platform designed for developers, builders, founders, and creators.
-Built using **Next.js**, **Convex**, **Clerk**, **Framer Motion**, and **ShadCN UI**, it helps users discover collaborators based on **skills**, **domains**, and **interests**.
+Built using **Next.js**, **Convex**, **Clerk**, **Framer Motion**, and **ShadCN UI**, the platform delivers a modern, smooth, and fully animated collaboration experience.
 
 ---
 
 # 📸 Screenshots
 
-### 🖼️ Swipe Interface
-![Swipe UI](/screenshots/ss1.jpg)
+### 🟨 Swipe Interface & Dashboard
 
-### 🖼️ Profile Preview Modal
-![Profile Modal](/screenshots/ss2.jpg)
+Swipe **right** to accept and **left** to skip — a modern, intuitive interface for matching collaborators.
 
-### 🖼️ Matches Sidebar
-![Matches Sidebar](/screenshots/ss3.jpg)
+![Swipe UI](public/screenshots/ss1.png)
 
-### 🖼️ Skill & Interest Display
-![Skills UI](/screenshots/ss4.jpg)
+---
 
-### 🖼️ Navbar + Global Search
-![Navbar Search](/screenshots/ss5.jpg)
+### 🟨 Upload Project
 
-### 🖼️ Glass UI + Animations
-![Glass UI](/screenshots/ss6.jpg)
+Easily upload project ideas to find skilled collaborators.
 
-### 🖼️ User Swipe Card
-![Swipe Card](/screenshots/ss7.jpg)
+![Matches Sidebar](public/screenshots/ss3.png)
 
-### 🖼️ Full Layout Example
-![Full Layout](/screenshots/ss8.jpg)
+---
+
+### 🟨 Developer Profile
+
+View detailed developer profiles including skills, interests, and experience.
+
+![Skills UI](public/screenshots/ss4.png)
+
+---
+
+### 🟨 Authentication Page
+
+Simple and clean login/register interface.
+
+![Navbar Search](public/screenshots/ss5.png)
+
+---
+
+### 🟨 Google-Based Authentication
+
+Secure and fast authentication using Google OAuth.
+
+![Glass UI](public/screenshots/ss6.png)
+
+---
+
+### 🟨 Onboarding Requirements
+
+New users fill out necessary information to help the platform optimize matches.
+
+![Swipe Card](public/screenshots/ss7.png)
+
+---
+
+### 🟨 Convex Database Dashboard
+
+Backend tables and rows powered by Convex.
+
+![Full Layout](public/screenshots/ss8.png)
 
 ---
 
 # ✨ Features
 
 ## 🔥 Swipe-Based Matching
-A smooth, intuitive swipe interface similar to Tinder, powered by **Framer Motion**.
+
+A smooth and intuitive swipe interface powered by **Framer Motion**.  
 Users can:
-- Swipe **right** → Like
-- Swipe **left** → Skip
-- Use action buttons for like / dislike
-- Open full profile details with one tap
+
+- Swipe **right** to like
+- Swipe **left** to skip
+- Tap to view full profile details
+- Use quick-action buttons for decision-making
+
+---
 
 ## 🪄 Random Avatar Generator
-Each new user receives a randomly selected avatar from 24 SVG placeholders
+
+Each new user receives a randomly generated avatar from 24 available illustrations  
 (`placeholder/1.svg` → `placeholder/24.svg`).
 
-This keeps profiles visually consistent even without user photos.
+This ensures a consistent visual identity for users without profile images.
+
+---
 
 ## 👤 Profile Details Modal
+
 The expanded profile modal includes:
+
 - Name, age, bio
-- Skills & technical stack
-- Interests
-- Experience
-- Social media sections
+- Skills & tech stack
+- Interests and experience
+- Social media links
 - “Message” and “Connect” actions
 
+---
+
 ## ⭐ Matches Sidebar
+
 A left-side panel showing:
+
 - User avatar
 - Name & age
 - Interests summary
-- Favorite/star button
+- Favorite/star action
 - Persistent match list
 
+---
+
 ## 🔍 Global Search
+
 Search for innovators by:
+
 - Name
 - Skills (React, Firebase, UX, etc.)
 - Tools / technologies
 - Domains (AI, Web, Mobile, etc.)
 
+---
+
 ## 🎨 Modern UI & Animations
+
 - ShadCN UI components
-- Tailwind CSS styling
+- Tailwind CSS
 - Lucide icons
 - Glassmorphism elements
 - Smooth transitions & spring animations
-- Fully responsive
+- Fully responsive layout
 
 ---
 
 # 🛠️ Tech Stack
 
-### **Frontend**
+## **Frontend**
+
 - Next.js 14 (App Router)
 - TypeScript
 - Tailwind CSS
@@ -232,16 +145,18 @@ Search for innovators by:
 - Framer Motion
 - Lucide Icons
 
-### **Backend**
-- Convex (Real-time database + functions)
-- Convex queries + mutations for:
+## **Backend**
+
+- Convex (real-time database + functions)
+- Queries & mutations for:
   - Users
   - Swipe actions
   - Matches
   - Skill parsing
 
-### **Authentication**
-- Clerk (OAuth, email login)
+## **Authentication**
+
+- Clerk (email, OAuth, Google login)
 
 ---
 
@@ -257,4 +172,4 @@ yarn
 pnpm install
 # or
 bun install
-````
+```
