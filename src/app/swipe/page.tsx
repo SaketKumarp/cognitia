@@ -12,8 +12,7 @@ import SwipeCard from "@/components/swipecard";
 
 import { useAuth } from "@clerk/nextjs";
 import Sidebar from "@/components/sidebar";
-import { randomImage } from "@/func";
-
+import Navbar from "@/components/navbar";
 import { toast } from "sonner";
 import { useSwipeUser } from "@/hook/use-swipe-user";
 import { useRouter } from "next/navigation";
@@ -21,19 +20,34 @@ import { useRouter } from "next/navigation";
 export default function SwipePage() {
   const { userId } = useAuth();
   const { data: users, loading } = useGetAllUsers();
-  const { mutate: swipeUser } = useSwipeUser(); // <--- use swipe hook
+  const { mutate: swipeUser } = useSwipeUser();
 
   const [index, setIndex] = useState(0);
   const [forceSwipe, setForceSwipe] = useState<"left" | "right" | null>(null);
   const [showProfile, setShowProfile] = useState(false);
 
-  // remove myself from the list
-
   const router = useRouter();
+
+  // 24 placeholder images
+  const images = useMemo(
+    () => Array.from({ length: 24 }, (_, i) => `placeholder/${i + 1}.svg`),
+    []
+  );
+
+  // Filter out the current viewer
   const filteredUsers = useMemo(() => {
     if (!users || !userId) return [];
     return users.filter((u: any) => u.authId !== userId);
   }, [users, userId]);
+
+  // Assign a random image to each user *once*
+  const userImages = useMemo(() => {
+    const mapping: Record<string, string> = {};
+    filteredUsers.forEach((u) => {
+      mapping[u._id] = images[Math.floor(Math.random() * images.length)];
+    });
+    return mapping;
+  }, [filteredUsers, images]);
 
   if (loading || filteredUsers.length === 0) {
     return (
@@ -53,26 +67,21 @@ export default function SwipePage() {
     setForceSwipe(null);
   };
 
-  // When swipe happens from SwipeCard component
   const handleSwipe = (dir?: "left" | "right") => {
     const currentUser = filteredUsers[index];
     if (!currentUser) return;
 
-    if (dir === "left" || dir === "right") {
+    if (dir) {
       swipeUser(
         {
-          toUser: currentUser._id, // convex ID ❤️
+          toUser: currentUser._id,
           direction: dir,
         },
         {
           onSuccess: (res) => {
-            if (res.matched) {
-              console.log("🔥 YOU GOT A MATCH!");
-            }
+            if (res.matched) console.log("🔥 MATCHED!");
           },
-          onError: () => {
-            toast.error("an error occured!");
-          },
+          onError: () => toast.error("An error occurred!"),
         }
       );
     }
@@ -80,25 +89,19 @@ export default function SwipePage() {
     nextCard();
   };
 
-  // When buttons pressed
   const handleButtonSwipe = (dir: "left" | "right") => {
     const currentUser = filteredUsers[index];
     if (!currentUser) return;
 
-    // trigger animation
     setForceSwipe(dir);
 
-    // send swipe to backend
     swipeUser(
       { toUser: currentUser._id, direction: dir },
       {
-        onSuccess: () => {
-          toast.success("match found");
-        },
+        onSuccess: () => toast.success("Match found"),
       }
     );
 
-    // show next card
     setTimeout(nextCard, 350);
   };
 
@@ -106,8 +109,10 @@ export default function SwipePage() {
 
   return (
     <>
-      {/* background */}
-      <div className="h-screen w-screen flex relative overflow-hidden">
+      <Navbar />
+
+      <div className="h-screen w-screen flex relative overflow-hidden pt-24">
+        {/* Background */}
         <motion.div
           className="absolute inset-0"
           style={{
@@ -122,28 +127,26 @@ export default function SwipePage() {
 
         <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
-        {/* Sidebar */}
         <div className="relative z-40">
           <Sidebar />
         </div>
 
-        {/* swipe area */}
+        {/* Swipe Section */}
         <div className="flex-1 flex flex-col items-center justify-center relative z-30">
           <motion.div className="relative w-[360px] h-[530px]">
             <SwipeCard
               key={user._id}
-              image={randomImage}
+              image={userImages[user._id]} // ⭐ RANDOM UNIQUE IMAGE
               name={user.name}
               age={user.age || 18}
               skills={user.skills || []}
-              onSwipe={handleSwipe} // <-- swipe triggered
-              forceSwipe={forceSwipe} // <-- force animation
+              onSwipe={handleSwipe}
+              forceSwipe={forceSwipe}
             />
           </motion.div>
 
-          {/* buttons */}
+          {/* Bottom Action Buttons */}
           <motion.div className="mt-8 flex gap-6 p-4 rounded-full bg-white/10 backdrop-blur-2xl border border-white/20">
-            {/* left */}
             <Button
               size="icon"
               className="rounded-full bg-red-600/90 text-white h-16 w-16"
@@ -152,7 +155,6 @@ export default function SwipePage() {
               <X size={34} />
             </Button>
 
-            {/* profile */}
             <Button
               size="icon"
               className="rounded-full bg-blue-600/90 text-white h-16 w-16"
@@ -161,7 +163,6 @@ export default function SwipePage() {
               <Plus size={34} />
             </Button>
 
-            {/* right */}
             <Button
               size="icon"
               className="rounded-full bg-green-600/90 text-white h-16 w-16"
@@ -169,6 +170,7 @@ export default function SwipePage() {
             >
               <Heart size={34} />
             </Button>
+
             <Button
               size="icon"
               className="rounded-full bg-yellow-600/90 text-white h-16 w-16"
@@ -180,7 +182,6 @@ export default function SwipePage() {
         </div>
       </div>
 
-      {/* Profile modal */}
       {typeof window !== "undefined" &&
         ReactDOM.createPortal(
           <AnimatePresence>
