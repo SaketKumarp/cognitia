@@ -5,41 +5,39 @@ Built using **Next.js**, **Convex**, **Clerk**, **Framer Motion**, and **ShadCN 
 
 ---
 
-# 📸 Screenshots
+## 📸 Screenshots
 
-### 🖼️ Swipe Interface
+### 🟨 Swipe Interface
 
-![Swipe UI](/screenshots/ss1.jpg)
+![Swipe UI](public/screenshots/ss1.png)
 
-### 🖼️ Profile Preview Modal
+### 🟨 Profile Preview Modal
 
-![Profile Modal](/screenshots/ss2.jpg)
+![Profile Modal](public/screenshots/ss2.png)
 
-### 🖼️ Matches Sidebar
+### 🟨 Matches Sidebar
 
-![Matches Sidebar](/screenshots/ss3.jpg)
+![Matches Sidebar](public/screenshots/ss3.png)
 
-### 🖼️ Skill & Interest Display
+### 🟨 Skill & Interest Display
 
-![Skills UI](/screenshots/ss4.jpg)
+![Skills UI](public/screenshots/ss4.png)
 
-### 🖼️ Navbar + Global Search
+### 🟨 Navbar + Global Search
 
-![Navbar Search](/screenshots/ss5.jpg)
+![Navbar Search](public/screenshots/ss5.png)
 
-### 🖼️ Glass UI + Animations
+### 🟨 Glass UI + Animations
 
-![Glass UI](/screenshots/ss6.jpg)
+![Glass UI](public/screenshots/ss6.png)
 
-### 🖼️ User Swipe Card
+### 🟨 User Swipe Card
 
-![Swipe Card](/screenshots/ss7.jpg)
+![Swipe Card](public/screenshots/ss7.png)
 
-### 🖼️ Full Layout Example
+### 🟨 Full Layout Example
 
-![Full Layout](/screenshots/ss8.jpg)
-
----
+![Full Layout](public/screenshots/ss8.png)
 
 # ✨ Features
 
