@@ -1,36 +1,262 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🚀 Innovators Hub
 
-## Getting Started
+Innovators Hub is a swipe-based networking platform designed for developers, builders, founders, and creators.  
+Built using **Next.js**, **Convex**, **Clerk**, **Framer Motion**, and **ShadCN UI**, it helps users discover collaborators based on **skills**, **domains**, and **interests**.
 
-First, run the development server:
+---
+
+# 📸 Screenshots
+
+### 🖼️ Swipe Interface
+
+![Swipe UI](/screenshots/ss1.jpg)
+
+### 🖼️ Profile Preview Modal
+
+![Profile Modal](/screenshots/ss2.jpg)
+
+### 🖼️ Matches Sidebar
+
+![Matches Sidebar](/screenshots/ss3.jpg)
+
+### 🖼️ Skill & Interest Display
+
+![Skills UI](/screenshots/ss4.jpg)
+
+### 🖼️ Navbar + Global Search
+
+![Navbar Search](/screenshots/ss5.jpg)
+
+### 🖼️ Glass UI + Animations
+
+![Glass UI](/screenshots/ss6.jpg)
+
+### 🖼️ User Swipe Card
+
+![Swipe Card](/screenshots/ss7.jpg)
+
+### 🖼️ Full Layout Example
+
+![Full Layout](/screenshots/ss8.jpg)
+
+---
+
+# ✨ Features
+
+## 🔥 Swipe-Based Matching
+
+A smooth, intuitive swipe interface similar to Tinder, powered by **Framer Motion**.  
+Users can:
+
+- Swipe **right** → Like
+- Swipe **left** → Skip
+- Use action buttons for like / dislike
+- Open full profile details with one tap
+
+## 🪄 Random Avatar Generator
+
+Each new user receives a randomly selected avatar from 24 SVG placeholders  
+(`placeholder/1.svg` → `placeholder/24.svg`).
+
+This keeps profiles visually consistent even without user photos.
+
+## 👤 Profile Details Modal
+
+The expanded profile modal includes:
+
+- Name, age, bio
+- Skills & technical stack
+- Interests
+- Experience
+- Social media sections
+- “Message” and “Connect” actions
+
+## ⭐ Matches Sidebar
+
+A left-side panel showing:
+
+- User avatar
+- Name & age
+- Interests summary
+- Favorite/star button
+- Persistent match list
+
+## 🔍 Global Search
+
+Search for innovators by:
+
+- Name
+- Skills (React, Firebase, UX, etc.)
+- Tools / technologies
+- Domains (AI, Web, Mobile, etc.)
+
+## 🎨 Modern UI & Animations
+
+- ShadCN UI components
+- Tailwind CSS styling
+- Lucide icons
+- Glassmorphism elements
+- Smooth transitions & spring animations
+- Fully responsive
+
+---
+
+# 🛠️ Tech Stack
+
+### **Frontend**
+
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- ShadCN UI
+- Framer Motion
+- Lucide Icons
+
+### **Backend**
+
+- Convex (Real-time database + functions)
+- Convex queries + mutations for:
+  - Users
+  - Swipe actions
+  - Matches
+  - Skill parsing
+
+### **Authentication**
+
+- Clerk (OAuth, email login)
+
+---
+
+# 📦 Getting Started
+
+Install dependencies:
+
+````bash
+npm install
+# or
+yarn
+# or
+pnpm install
+# or
+bun install
+# 🚀 Innovators Hub
+
+Innovators Hub is a swipe-based networking platform designed for developers, builders, founders, and creators.
+Built using **Next.js**, **Convex**, **Clerk**, **Framer Motion**, and **ShadCN UI**, it helps users discover collaborators based on **skills**, **domains**, and **interests**.
+
+---
+
+# 📸 Screenshots
+
+### 🖼️ Swipe Interface
+![Swipe UI](/screenshots/ss1.jpg)
+
+### 🖼️ Profile Preview Modal
+![Profile Modal](/screenshots/ss2.jpg)
+
+### 🖼️ Matches Sidebar
+![Matches Sidebar](/screenshots/ss3.jpg)
+
+### 🖼️ Skill & Interest Display
+![Skills UI](/screenshots/ss4.jpg)
+
+### 🖼️ Navbar + Global Search
+![Navbar Search](/screenshots/ss5.jpg)
+
+### 🖼️ Glass UI + Animations
+![Glass UI](/screenshots/ss6.jpg)
+
+### 🖼️ User Swipe Card
+![Swipe Card](/screenshots/ss7.jpg)
+
+### 🖼️ Full Layout Example
+![Full Layout](/screenshots/ss8.jpg)
+
+---
+
+# ✨ Features
+
+## 🔥 Swipe-Based Matching
+A smooth, intuitive swipe interface similar to Tinder, powered by **Framer Motion**.
+Users can:
+- Swipe **right** → Like
+- Swipe **left** → Skip
+- Use action buttons for like / dislike
+- Open full profile details with one tap
+
+## 🪄 Random Avatar Generator
+Each new user receives a randomly selected avatar from 24 SVG placeholders
+(`placeholder/1.svg` → `placeholder/24.svg`).
+
+This keeps profiles visually consistent even without user photos.
+
+## 👤 Profile Details Modal
+The expanded profile modal includes:
+- Name, age, bio
+- Skills & technical stack
+- Interests
+- Experience
+- Social media sections
+- “Message” and “Connect” actions
+
+## ⭐ Matches Sidebar
+A left-side panel showing:
+- User avatar
+- Name & age
+- Interests summary
+- Favorite/star button
+- Persistent match list
+
+## 🔍 Global Search
+Search for innovators by:
+- Name
+- Skills (React, Firebase, UX, etc.)
+- Tools / technologies
+- Domains (AI, Web, Mobile, etc.)
+
+## 🎨 Modern UI & Animations
+- ShadCN UI components
+- Tailwind CSS styling
+- Lucide icons
+- Glassmorphism elements
+- Smooth transitions & spring animations
+- Fully responsive
+
+---
+
+# 🛠️ Tech Stack
+
+### **Frontend**
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- ShadCN UI
+- Framer Motion
+- Lucide Icons
+
+### **Backend**
+- Convex (Real-time database + functions)
+- Convex queries + mutations for:
+  - Users
+  - Swipe actions
+  - Matches
+  - Skill parsing
+
+### **Authentication**
+- Clerk (OAuth, email login)
+
+---
+
+# 📦 Getting Started
+
+Install dependencies:
 
 ```bash
-npm run dev
+npm install
 # or
-yarn dev
+yarn
 # or
-pnpm dev
+pnpm install
 # or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+bun install
+````
